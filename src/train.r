@@ -106,6 +106,10 @@ if(length(categorical_features) > 0){
     df <- df_encoded
 }
 
+# Remove constant columns
+constant_columns <- which(apply(df, 2, var) == 0)
+df <- df[,-constant_columns]
+
 # Standard Scaling
 scaling_values <- list()
 for (feature in numeric_features) {
@@ -182,7 +186,7 @@ kernel <- "radial"
 
 # Train the model using SVR
 model <- svm(
-  as.formula(paste(target_feature, "~ .")), 
+  as.formula(paste("`", target_feature, "`", "~ .", sep = "")), # enclose in back-ticks in case target feature has a space in it 
   data=df, 
   kernel=kernel, 
   cost=cost, 

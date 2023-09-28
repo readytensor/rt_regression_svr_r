@@ -129,4 +129,8 @@ predictions_df <- data.frame(prediction = predictions)
 predictions_df <- tibble::tibble(ids = ids) %>% dplyr::bind_cols(predictions_df)
 colnames(predictions_df)[1] <- id_feature
 
+# avoid using scientific notation when writing the CSV file
+options(scipen = 999)
+
+# write the predictions to a CSV file
 write.csv(predictions_df, PREDICTIONS_FILE, row.names = FALSE)
