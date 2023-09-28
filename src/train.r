@@ -58,7 +58,6 @@ df <- read.csv(file.path(TRAIN_DIR, file_name), skip = 0, col.names = col_names,
 # Data Preprocessing
 # Impute missing data
 imputation_values <- list()
-
 for (column in nullable_features) {
     # Create missing indicator
     missing_indicator_col_name <- paste(column, "is_missing", sep="_")
@@ -70,10 +69,12 @@ for (column in nullable_features) {
         value <- as.character(df[, column] %>% tidyr::replace_na())
         value <- value[1]
     }
+
     df[, column][is.na(df[, column])] <- value
     imputation_values[column] <- value
 }
 saveRDS(imputation_values, IMPUTATION_FILE)
+
 
 
 # Encoding Categorical features
@@ -84,7 +85,6 @@ saveRDS(imputation_values, IMPUTATION_FILE)
 ids <- df[, id_feature]
 target <- df[, target_feature]
 df <- df %>% select(-all_of(c(id_feature, target_feature)))
-
 
 # One Hot Encoding
 if(length(categorical_features) > 0){
@@ -106,9 +106,13 @@ if(length(categorical_features) > 0){
     df <- df_encoded
 }
 
+
 # Remove constant columns
 constant_columns <- which(apply(df, 2, var) == 0)
-df <- df[,-constant_columns]
+if (length(constant_columns) > 0) {
+    df <- df[,-constant_columns]
+} 
+
 
 # Standard Scaling
 scaling_values <- list()
