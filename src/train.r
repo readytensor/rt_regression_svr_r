@@ -178,18 +178,15 @@ df[[target_feature]] <- target  # Add the target feature back to the dataframe
 # Set SVR parameters
 epsilon <- 0.1
 cost <- 1
-gamma <- 0.0  
-kernel <- "radial"  # This is the RBF kernel, you can change to "linear", "polynomial" etc. based on your needs
+kernel <- "radial"  
 
 # Train the model using SVR
 model <- svm(
   as.formula(paste(target_feature, "~ .")), 
   data=df, 
-  method="C-classification", 
   kernel=kernel, 
   cost=cost, 
-  epsilon=epsilon,
-  gamma=gamma
+  epsilon=epsilon
 )
 
 # Save the model
